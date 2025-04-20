@@ -6,6 +6,10 @@ from parse_markdown import * #split_nodes_delimiter,extract_markdown_images, ext
 from fileio import *
 from generate_site import generate_page, generate_content
 
+#get first arg to main.py
+import sys
+import os
+
 print("=-=-=- main.py -=-=-=")
 
 def main():
@@ -171,12 +175,16 @@ def main():
     #retval = markdown_to_html_node(md)
     #print(retval.to_html())
 
+    basepath = "/"
+    if len(sys.argv) > 1:
+        basepath = sys.argv[1]
+    print(f"Basepath: {basepath}")
     cur_path = get_root_path()
     try:
-        copy_to_dir(f"{cur_path}/static/",f"{cur_path}/public/")
+        copy_to_dir(f"{cur_path}/static/",f"{cur_path}/docs/")
     except Exception as e:
         print(e)
-    generate_content()
+    generate_content(basepath)
     pass
 
 main()

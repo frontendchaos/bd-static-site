@@ -9,22 +9,22 @@ def copy_static_to_public():
     except Exception as e:
         print(e)
 
-def generate_content():
+def generate_content(basepath):
     content_dir = "./content"
     template_path = "./template.html"
-    dest_dir = "./public"
+    dest_dir = "./docs"
     for root, dirs, files in os.walk(content_dir):
         for file in files:
             file_path = os.path.join(root, file)
             if file_path.endswith('.md'):
                 mod_path = file_path.replace(content_dir, dest_dir)
                 mod_path = mod_path.replace('.md', '.html')
-                generate_page(file_path, template_path, mod_path)
+                generate_page(basepath, file_path, template_path, mod_path)
 
 
 
 
-def generate_page(from_path, template_path, dest_path):
+def generate_page(basepath, from_path, template_path, dest_path):
     print(f"Generating page from {from_path} to {dest_path} using {template_path}")
     with open(from_path, 'r', encoding='utf-8') as from_file:
         markdown = from_file.read()
@@ -42,6 +42,8 @@ def generate_page(from_path, template_path, dest_path):
     # Replace the placeholder in the template with the generated HTML
     template_content = template_content.replace("{{ Content }}", html)
     template_content = template_content.replace("{{ Title }}", title)
+    template_content = template_content.replace('href="/', f'href="{basepath}')
+    template_content = template_content.replace('src="/', f'src="{basepath}')
 
     # Create the directory structure if it doesn't exist
     os.makedirs(os.path.dirname(dest_path), exist_ok=True)
